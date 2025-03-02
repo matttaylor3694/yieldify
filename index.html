@@ -1,0 +1,83 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Yieldify - Smart Rental Yield Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #result, #comparison {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .property-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Yieldify - Smart Rental Yield Calculator</h1>
+    <p>Paste a property listing URL or enter values manually to calculate rental yield.</p>
+    <input type="text" id="property-url" placeholder="Paste property URL (optional)">
+    <input type="number" id="price" placeholder="Property Price (£)">
+    <input type="number" id="rent" placeholder="Monthly Rent (£)">
+    <button onclick="calculateYield()">Calculate Yield</button>
+    <button onclick="saveProperty()">Save Property</button>
+    <div id="result"></div>
+    
+    <h2>Saved Properties</h2>
+    <div id="comparison" class="property-list"></div>
+
+    <script>
+        let properties = [];
+
+        function calculateYield() {
+            let price = parseFloat(document.getElementById("price").value);
+            let rent = parseFloat(document.getElementById("rent").value);
+
+            if (isNaN(price) || isNaN(rent) || price <= 0 || rent <= 0) {
+                document.getElementById("result").innerText = "Please enter valid numbers for price and rent.";
+                return;
+            }
+
+            let annualRent = rent * 12;
+            let yield = ((annualRent / price) * 100).toFixed(2);
+            document.getElementById("result").innerText = `Rental Yield: ${yield}%`;
+        }
+
+        function saveProperty() {
+            let price = parseFloat(document.getElementById("price").value);
+            let rent = parseFloat(document.getElementById("rent").value);
+
+            if (isNaN(price) || isNaN(rent) || price <= 0 || rent <= 0) {
+                alert("Please enter valid numbers to save.");
+                return;
+            }
+
+            let annualRent = rent * 12;
+            let yield = ((annualRent / price) * 100).toFixed(2);
+            properties.push({ price, rent, yield });
+            updateComparison();
+        }
+
+        function updateComparison() {
+            let comparisonDiv = document.getElementById("comparison");
+            comparisonDiv.innerHTML = "";
+            properties.forEach((prop, index) => {
+                comparisonDiv.innerHTML += `<p>Property ${index + 1}: £${prop.price}, Rent: £${prop.rent}, Yield: ${prop.yield}%</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
